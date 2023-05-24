@@ -2,17 +2,17 @@ require 'ruby2d'
 
 # Anger fönstrets titel och storlek
 set title: 'Turals Stacker Spel'
-GRID_SIZE = 40
-GRID_COLOR = Color.new('#222222')
-BLOCK_COLOR = Color.new(['red', 'green', 'purple'].sample)
-Height = 16
-Width = 7
+grid_size = 40
+grid_color = Color.new('#222222')
+block_color = Color.new(['red', 'green', 'purple'].sample)
+höjd = 16
+bredd = 7
 
 
-set height: Height * GRID_SIZE
-set width: Width * GRID_SIZE
+set height: höjd * grid_size
+set width: bredd * grid_size
 
-# Start meny koden, skapar en text so visas överst på skärmen.
+# Start meny koden, skapar en text som visas överst på skärmen.
 start_text1 = Text.new('TURALS STACKER', size: 20, x:60, y:20)
 start_text2 = Text.new('TRYCK "a" FÖR ATT STARTA SPELET!', x: 10, y: 60, size: 15, color: 'white')
 
@@ -22,7 +22,7 @@ start_text2 = Text.new('TRYCK "a" FÖR ATT STARTA SPELET!', x: 10, y: 60, size: 
 game_started = false
 
 # Spel koden, med dess egenskaper som riktning och hastighet.
-current_line = Height - 1
+current_line = höjd - 1
 current_direction = :right
 speed = 4
 record = 0
@@ -30,10 +30,10 @@ record = 0
 frozen_squares = {}
 active_squares = (0..4).map do |index|
   Square.new(
-    x: GRID_SIZE * index,
-    y: GRID_SIZE * current_line,
-    size: GRID_SIZE,
-    color: BLOCK_COLOR
+    x: grid_size * index,
+    y: grid_size * current_line,
+    size: grid_size,
+    color: block_color
   )
 end
 
@@ -48,13 +48,13 @@ update do
       case current_direction
       when :right
         # Flyttar aktiva rutor åt höger.
-        active_squares.each { |square| square.x += GRID_SIZE }
+        active_squares.each { |square| square.x += grid_size }
         if active_squares.last.x + active_squares.last.width >= Window.width
           current_direction = :left
         end
       when :left
         # När högerkanten är nådd, byter den rörelseriktning åt vänster. 
-        active_squares.each { |square| square.x -= GRID_SIZE }
+        active_squares.each { |square| square.x -= grid_size }
         if active_squares.first.x <= 0
           # När vänsterkanten är nådd, byter den rörelseriktning åt vänster.
           current_direction = :right
@@ -74,13 +74,13 @@ on :key_down do |event|
     start_text2.remove
     
     # X:axeln:
-    (0..Window.width).step(GRID_SIZE).each do |x|
-        Line.new(x1: x, x2: x, y1: 0, y2: Window.height, width: 2, color: GRID_COLOR, z: 1)
+    (0..Window.width).step(grid_size).each do |x|
+        Line.new(x1: x, x2: x, y1: 0, y2: Window.height, width: 2, color: grid_color, z: 1)
     end
     
     # Y:axeln:
-    (0..Window.height).step(GRID_SIZE).each do |y|
-        Line.new(x1: 0, x2: Window.width, y1: y, y2: y, width: 2, color: GRID_COLOR, z: 1)
+    (0..Window.height).step(grid_size).each do |y|
+        Line.new(x1: 0, x2: Window.width, y1: y, y2: y, width: 2, color: grid_color, z: 1)
     end
     game_started = true
   end
@@ -96,13 +96,13 @@ on :key_down do |event|
         speed += 1
         
         active_squares.each do |active_square|
-            if current_line == Height - 2 || frozen_squares.has_key?("#{active_square.x}, #{active_square.y + GRID_SIZE}")
+            if current_line == höjd - 2 || frozen_squares.has_key?("#{active_square.x}, #{active_square.y + grid_size}")
             #Lagrar de frusna rutorna i hakparanteset.
             frozen_squares["#{active_square.x}, #{active_square.y}"] = Square.new(
             x: active_square.x,
             y: active_square.y,
-            color: BLOCK_COLOR,
-            size: GRID_SIZE
+            color: block_color,
+            size: grid_size
             )
         end
         end
@@ -111,17 +111,17 @@ on :key_down do |event|
         active_squares.each(&:remove)
         active_squares = []
 
-        (0..Width).each do |index|
-        x = GRID_SIZE * index
-        y = GRID_SIZE * current_line
+        (0..bredd).each do |index|
+        x = grid_size * index
+        y = grid_size * current_line
 
-        if frozen_squares.has_key?("#{x}, #{y + GRID_SIZE}")
+        if frozen_squares.has_key?("#{x}, #{y + grid_size}")
           # Skapar nya aktiva rutor baserat på frusna rutor.
             active_squares.push(Square.new(
             x: x,
             y: y,
-            color: BLOCK_COLOR,
-            size: GRID_SIZE
+            color: block_color,
+            size: grid_size
             ))
         end
     end
